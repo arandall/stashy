@@ -140,6 +140,13 @@ class Repository(ResourceBase):
             params['orderBy'] = orderBy
         return self._client.get(self.url('/tags'), params=params)
 
+    @ok_or_error
+    def create_tag(self, name, message, branch='master'):
+        return self._client.post(self.url('/tags', is_branches=False),
+                                 data=dict(name=name,
+                                 startPoint="refs/heads/%s" % branch,
+                                 message=message))
+
     @response_or_error
     def _get_default_branch(self):
         return self._client.get(self.url('/branches/default'))
